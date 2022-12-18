@@ -1,7 +1,7 @@
 from Location import Location
 from MyHashTable import MyHashTable
 from Package import Package
-from Graphs import Graph, Vertex
+from Graphs import Graph
 import csv
 
 # Loads the package data into a hashtable
@@ -12,13 +12,13 @@ def load_package_data(table):
         reader = csv.DictReader(file)
         # iterate each row, parse the data, and create a new Package object
         for row in reader:
-            package = Package(row["Package ID"],
-                              row["Address"],
-                              row["City"],
-                              row["State"],
-                              row["Zip"],
-                              row["Delivery Deadline"],
-                              row["Mass KILO"])
+            package = Package(row["Package ID"].strip(),
+                              row["Address"].strip(),
+                              row["City"].strip(),
+                              row["State"].strip(),
+                              row["Zip"].strip(),
+                              row["Delivery Deadline"].strip(),
+                              row["Mass KILO"].strip())
             # store the Package object in the hashtable
             table.insert(package)
 
@@ -34,10 +34,10 @@ def load_location_data():
         reader = csv.DictReader(file)
         # iterate each row, parse the data, and create a new Location object
         for row in reader:
-            location = Location(row["Id"],
-                                row["Location"],
-                                row["Street"],
-                                row["Zip"])
+            location = Location(row["Id"].strip(),
+                                row["Location"].strip(),
+                                row["Street"].strip(),
+                                row["Zip"].strip())
             # store the Location object in the locations list
             locations.append(location)
     return locations
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     graph = Graph()
     # add each location as a vertex to the graph
     for location in locations:
-        graph.add_vertex(Vertex(location))
+        graph.add_vertex(location)
     # for each vertex, add an undirected edge to all vertices it connects to
     for vertex in graph.adjacency_list.keys():
         # retrieve the location id contained in the vertex
@@ -83,5 +83,5 @@ if __name__ == '__main__':
         connections = distances.get(location_id)
         for idx, connection in enumerate(connections):
             idx = str(idx)
-            graph.add_undirected_edge(vertex, graph.get_vertex(idx), connection)
-    graph.print()
+            graph.add_undirected_edge(vertex, graph.get_vertex_by_id(idx), connection)
+

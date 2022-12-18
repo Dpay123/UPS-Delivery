@@ -1,11 +1,3 @@
-# A Vertex is a point on a graph that includes a location object
-class Vertex:
-    def __init__(self, location):
-        self.id = location.id
-        self.location = location
-
-    def __str__(self):
-        return "Vertex: %s, Location: %s" % (self.id, self.location)
 
 # a collection of Vertices and edges between
 # represents Locations and Distances
@@ -21,9 +13,15 @@ class Graph:
         self.adjacency_list[location] = []
 
     # retrieve a vertex using given id
-    def get_vertex(self, id):
+    def get_vertex_by_id(self, id):
         for vertex in self.adjacency_list.keys():
             if vertex.id == id:
+                return vertex
+
+    # retrieve a vertex using given address
+    def get_vertex_by_address(self, address):
+        for vertex in self.adjacency_list.keys():
+            if vertex.street == address:
                 return vertex
 
     # adds a directed edge between two vertices
@@ -35,6 +33,13 @@ class Graph:
     def add_undirected_edge(self, location_a, location_b, distance = 1.0):
         self.add_directed_edge(location_a, location_b, distance)
         self.add_directed_edge(location_b, location_a, distance)
+
+    # given two string addresses, return the distance between them
+    # could be used to find the distance between the addresses of two packages
+    def distance_between(self, address_a, address_b):
+        vertex_a = self.get_vertex_by_address(address_a)
+        vertex_b = self.get_vertex_by_address(address_b)
+        return self.edge_weights[(vertex_a, vertex_b)]
 
     # I used this for debugging
     # check to ensure that all vertices and edges are working properly
