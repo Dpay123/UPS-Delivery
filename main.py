@@ -85,3 +85,4 @@ if __name__ == '__main__':
             idx = str(idx)
             graph.add_undirected_edge(vertex, graph.get_vertex_by_id(idx), connection)
 
+    graph.print()
