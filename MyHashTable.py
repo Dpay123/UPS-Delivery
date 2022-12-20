@@ -58,7 +58,7 @@ class MyHashTable:
 
     # string rep
     def print(self):
-        string = "-----Package List-----\n"
+        string = "-----Packages at Hub-----\n"
         for row in self.table:
             for p in row:
                 string = string + str(p) + "\n"

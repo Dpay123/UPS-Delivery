@@ -1,8 +1,12 @@
+from DeliveryManager import DeliveryManager
 from Location import Location
 from MyHashTable import MyHashTable
 from Package import Package
 from Graphs import Graph
 import csv
+
+from Truck import Truck
+
 
 # load the location data file
 # returns a list of Location objects that each belong to a location
@@ -54,3 +58,6 @@ if __name__ == '__main__':
     graph = Graph()
     # load the data into the graph
     graph.load(locations, distances)
+    # create a DeliveryManager
+    dm = DeliveryManager(packages, graph)
+    dm.status()
