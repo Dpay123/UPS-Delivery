@@ -50,6 +50,7 @@ def load_distance_data():
 if __name__ == '__main__':
     # create hash table and load data
     packages = MyHashTable(40)
+    packages.load_package_data()
     # create location list and load data
     locations = load_location_data()
     # create distance dictionary and load the data
@@ -60,4 +61,5 @@ if __name__ == '__main__':
     graph.load(locations, distances)
     # create a DeliveryManager
     dm = DeliveryManager(packages, graph)
+    # implement functionality using manager
     dm.status()

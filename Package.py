@@ -9,7 +9,7 @@ class Package:
         self.zip = zip
         self.deadline = deadline
         self.weight = weight
-        self.status = "At the hub"
+        self.status = "At Hub"
 
     # return a string representation of the package for GUI
     def __str__(self):

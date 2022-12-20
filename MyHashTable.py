@@ -10,7 +10,6 @@ class MyHashTable:
         # add n buckets (n = initial_capacity)
         for i in range(initial_capacity):
             self.table.append([])
-        self.load_package_data()
 
     # Loads the package data into a hashtable
     def load_package_data(self):
@@ -54,11 +53,18 @@ class MyHashTable:
     def remove(self, key):
         bucket = self.get_bucket(key)
         if key in bucket:
-            bucket.remove(key)
+            return bucket.pop(0)
+
+    def capacity(self):
+        count = 0
+        for row in self.table:
+            if row:
+                count += 1
+        return count
 
     # string rep
     def print(self):
-        string = "-----Packages at Hub-----\n"
+        string = "-----Packages-----\n"
         for row in self.table:
             for p in row:
                 string = string + str(p) + "\n"
