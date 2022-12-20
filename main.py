@@ -54,6 +54,3 @@ if __name__ == '__main__':
     graph = Graph()
     # load the data into the graph
     graph.load(locations, distances)
-
-    packages.print()
-    graph.print()
