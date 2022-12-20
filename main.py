@@ -4,24 +4,6 @@ from Package import Package
 from Graphs import Graph
 import csv
 
-# Loads the package data into a hashtable
-def load_package_data(table):
-    # open the .csv file containing the package info
-    with open("WGUPS Package File.csv") as file:
-        # create a dictionary reader object to iterate over each row
-        reader = csv.DictReader(file)
-        # iterate each row, parse the data, and create a new Package object
-        for row in reader:
-            package = Package(row["Package ID"].strip(),
-                              row["Address"].strip(),
-                              row["City"].strip(),
-                              row["State"].strip(),
-                              row["Zip"].strip(),
-                              row["Delivery Deadline"].strip(),
-                              row["Mass KILO"].strip())
-            # store the Package object in the hashtable
-            table.insert(package)
-
 # load the location data file
 # returns a list of Location objects that each belong to a location
 # each Location object appears in the index that corresponds to its location id
@@ -57,14 +39,13 @@ def load_distance_data():
             # separate the distances from the first cell and remove blanks
             distance_data = [x for x in row[1:] if x != '']
             # add to dictionary - id becomes key, distance list is value
-            distances[row[0]] = distance_data
+            distances[int(row[0])] = distance_data
         return distances
 
 # Main application functionality
 if __name__ == '__main__':
     # create hash table and load data
-    table = MyHashTable(40)
-    load_package_data(table)
+    packages = MyHashTable(40)
     # create location list and load data
     locations = load_location_data()
     # create distance dictionary and load the data
@@ -74,4 +55,5 @@ if __name__ == '__main__':
     # load the data into the graph
     graph.load(locations, distances)
 
+    packages.print()
     graph.print()

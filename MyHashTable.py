@@ -1,3 +1,7 @@
+import csv
+from Package import Package
+
+
 class MyHashTable:
     # Constructor
     def __init__(self, initial_capacity):
@@ -6,10 +10,29 @@ class MyHashTable:
         # add n buckets (n = initial_capacity)
         for i in range(initial_capacity):
             self.table.append([])
+        self.load_package_data()
+
+    # Loads the package data into a hashtable
+    def load_package_data(self):
+        # open the .csv file containing the package info
+        with open("WGUPS Package File.csv") as file:
+            # create a dictionary reader object to iterate over each row
+            reader = csv.DictReader(file)
+            # iterate each row, parse the data, and create a new Package object
+            for row in reader:
+                package = Package(row["Package ID"].strip(),
+                                  row["Address"].strip(),
+                                  row["City"].strip(),
+                                  row["State"].strip(),
+                                  row["Zip"].strip(),
+                                  row["Delivery Deadline"].strip(),
+                                  row["Mass KILO"].strip())
+                # store the Package object in the hashtable
+                self.insert(package)
 
     def get_bucket(self, item):
         # apply hash to get the bucket
-        bucket = hash(item) % len(self.table)
+        bucket = hash(item-1) % len(self.table)
         # retrieve bucket
         return self.table[bucket]
 
@@ -34,9 +57,9 @@ class MyHashTable:
             bucket.remove(key)
 
     # string rep
-    def __str__(self):
-        string = "Packages at the Hub:\n"
+    def print(self):
+        string = "-----Package List-----\n"
         for row in self.table:
             for p in row:
                 string = string + str(p) + "\n"
-        return string
+        print(string)

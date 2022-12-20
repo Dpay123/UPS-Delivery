@@ -2,7 +2,7 @@
 class Package:
     # each package has an id, address, city, state, zip, deadline, and weight
     def __init__(self, id, address, city, state, zip, deadline, weight):
-        self.id = id
+        self.id = int(id)
         self.address = address
         self.city = city
         self.state = state
