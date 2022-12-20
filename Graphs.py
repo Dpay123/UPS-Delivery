@@ -36,6 +36,26 @@ class Graph:
 
     # given two string addresses, return the distance between them
     # could be used to find the distance between the addresses of two packages
+
+    # Accepts a list of Location objects and a dictionary of distances
+    # each location is added as a vertex
+    # each connection between locations is added as an edge
+    def load(self, locations, distances):
+        # add each location as a vertex to the graph
+        for location in locations:
+            self.add_vertex(location)
+
+        # for each vertex, add an undirected edge to all vertices it connects to
+        for vertex in self.adjacency_list.keys():
+            # retrieve the location id contained in the vertex
+            location_id = vertex.id
+            # retrieve the associated list of connections of that location id
+            # will return a list such as [3.4, 5.6, ....]
+            connections = distances.get(location_id)
+            for idx, connection in enumerate(connections):
+                idx = str(idx)
+                self.add_undirected_edge(vertex, self.get_vertex_by_id(idx), connection)
+
     def distance_between(self, address_a, address_b):
         vertex_a = self.get_vertex_by_address(address_a)
         vertex_b = self.get_vertex_by_address(address_b)
@@ -57,6 +77,4 @@ class Graph:
         count = 0
         for k, v in self.edge_weights.items():
             count += 1
-            if (v != 'O'):
-                print("From vertex %s to vertex %s: %s miles" % (k[0].id, k[1].id, v))
         print("Count: 729 expexted, %s counted" % count)

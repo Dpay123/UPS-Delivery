@@ -71,18 +71,7 @@ if __name__ == '__main__':
     distances = load_distance_data()
     # create a graph to map the locations
     graph = Graph()
-    # add each location as a vertex to the graph
-    for location in locations:
-        graph.add_vertex(location)
-    # for each vertex, add an undirected edge to all vertices it connects to
-    for vertex in graph.adjacency_list.keys():
-        # retrieve the location id contained in the vertex
-        location_id = vertex.id
-        # retrieve the associated list of connections of that location id
-        # will return a list such as [3.4, 5.6, ....]
-        connections = distances.get(location_id)
-        for idx, connection in enumerate(connections):
-            idx = str(idx)
-            graph.add_undirected_edge(vertex, graph.get_vertex_by_id(idx), connection)
+    # load the data into the graph
+    graph.load(locations, distances)
 
     graph.print()
