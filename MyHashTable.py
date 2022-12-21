@@ -52,8 +52,7 @@ class MyHashTable:
     # remove an item with matching key
     def remove(self, key):
         bucket = self.get_bucket(key)
-        if key in bucket:
-            return bucket.pop(0)
+        return bucket.pop(0)
 
     def capacity(self):
         count = 0
@@ -64,8 +63,8 @@ class MyHashTable:
 
     # string rep
     def print(self):
-        string = "-----Packages-----\n"
+        print("-----Packages-----")
         for row in self.table:
             for p in row:
-                string = string + str(p) + "\n"
-        print(string)
+                print(p)
+        print()

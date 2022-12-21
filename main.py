@@ -61,5 +61,9 @@ if __name__ == '__main__':
     graph.load(locations, distances)
     # create a DeliveryManager
     dm = DeliveryManager(packages, graph)
+
     # implement functionality using manager
+    dm.load_first_trucks()
+
+    # print status
     dm.status()

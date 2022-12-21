@@ -7,12 +7,11 @@ class Truck:
     def __init__(self, name):
         self.name = name
         self.location = "4001 South 700 East"
-        # initialize a blank table to hold packages on the truck
-        self.cargo = MyHashTable(40)
+        # cargo to hold packages
+        self.cargo = []
 
     def load_package(self, package):
-        if self.cargo.capacity() < 16:
-            self.cargo.insert(package.id, package)
+        self.cargo.append(package)
 
     def unload_package(self, address):
         for package in self.cargo:
@@ -20,5 +19,7 @@ class Truck:
                 self.cargo.remove(package)
 
     def print(self):
-        print("%s | Location: %s | Packages Held: %s\n" % (self.name, self.location, self.cargo.capacity()))
-        self.cargo.print()
+        print("%s | Location: %s | Packages Held: %s" % (self.name, self.location, len(self.cargo)))
+        for p in range(len(self.cargo)):
+            print("---package", self.cargo[p])
+        print()

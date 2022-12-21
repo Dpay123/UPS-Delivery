@@ -15,16 +15,8 @@ class Package:
     def __str__(self):
         return "ID: %s " \
                "| Address: %s " \
-               "| City:  %s " \
-               "| State: %s " \
-               "| Zip:  %s " \
                "| Deadline: %s " \
-               "| Weight: %s " \
                "| Status: %s" % (self.id,
                                  self.address,
-                                 self.city,
-                                 self.state,
-                                 self.zip,
                                  self.deadline,
-                                 self.weight,
                                  self.status)
