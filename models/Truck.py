@@ -1,8 +1,6 @@
-from MyHashTable import MyHashTable
-
-
+# A Truck contains a list of packages and a name (ex. "Truck 1")
+# Trucks load packages from the hub and unload them at a Location
 class Truck:
-    # each truck contains a list of packages and a name (ex. "Truck 1")
     # each truck has a current location, and all trucks start at the hub
     def __init__(self, name):
         self.name = name

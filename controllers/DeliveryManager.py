@@ -1,9 +1,6 @@
-import csv
-
-from Graphs import Graph
-from Location import Location
-from MyHashTable import MyHashTable
-from Truck import Truck
+from models.Graph import Graph
+from models.MyHashTable import MyHashTable
+from models.Truck import Truck
 import datetime
 
 # This is the class that handles the main functionality of the program
@@ -12,8 +9,8 @@ import datetime
 class DeliveryManager:
     def __init__(self):
         # create and load the inventory of packages
-        self.packages = MyHashTable(40)
-        self.packages.load_package_data()
+        self.hub = MyHashTable(40)
+        self.hub.load_package_data()
         # create and load the graph with the distance/location data
         self.routes = Graph()
 
@@ -28,7 +25,7 @@ class DeliveryManager:
     # Remove a package from the hub and add to the specified truck
     def transfer_package_to_truck(self, package_id, truck):
         # remove package from hub
-        p = self.packages.remove(package_id)
+        p = self.hub.remove(package_id)
         # set package status
         p.status = "En Route"
         # load package to truck
@@ -75,7 +72,7 @@ class DeliveryManager:
     def load_third_truck(self, truck):
         # simply load the remaining packages at hub
         for i in range(40):
-            if self.packages.table[i]:
+            if self.hub.table[i]:
                 self.transfer_package_to_truck(i+1, truck)
 
     def truck_deliver_packages(self, truck):
@@ -83,7 +80,7 @@ class DeliveryManager:
         return
 
     def status(self):
-        self.packages.print()
+        self.hub.print()
         self.truck1.print()
         self.truck2.print()
         print("Time: ", self.time)

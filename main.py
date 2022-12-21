@@ -1,13 +1,6 @@
-from DeliveryManager import DeliveryManager
-from Location import Location
-from MyHashTable import MyHashTable
-from Package import Package
-from Graphs import Graph
-import csv
+from controllers.DeliveryManager import DeliveryManager
 
-from Truck import Truck
-
-# Main application functionality
+# Run the Main Application
 if __name__ == '__main__':
 
     # create a DeliveryManager

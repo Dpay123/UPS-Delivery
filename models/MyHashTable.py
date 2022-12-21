@@ -1,9 +1,9 @@
 import csv
-from Package import Package
+from models.Package import Package
 
-
+# A MyHashTable stores Packages at the hub by package id
+# Packages are transferred from this data structure to the trucks for delivery
 class MyHashTable:
-    # Constructor
     def __init__(self, initial_capacity):
         # initialize table
         self.table = []
@@ -14,7 +14,7 @@ class MyHashTable:
     # Loads the package data into a hashtable
     def load_package_data(self):
         # open the .csv file containing the package info
-        with open("WGUPS Package File.csv") as file:
+        with open("static/WGUPS Package File.csv") as file:
             # create a dictionary reader object to iterate over each row
             reader = csv.DictReader(file)
             # iterate each row, parse the data, and create a new Package object
@@ -29,21 +29,24 @@ class MyHashTable:
                 # store the Package object in the hashtable
                 self.insert(package)
 
+    # Apply hash to the passed item and return the bucket
     def get_bucket(self, item):
-        # apply hash to get the bucket
         bucket = hash(item-1) % len(self.table)
         # retrieve bucket
         return self.table[bucket]
 
     # Insert an item
     def insert(self, item):
+        # get bucket
         bucket = self.get_bucket(item.id)
         # insert item into bucket
         bucket.append(item)
 
     # Search for item by specifying the key
     def search(self, key):
+        # get bucket
         bucket = self.get_bucket(key)
+        # return bucket contents if exists
         if bucket:
             return bucket[0]
         else:
@@ -51,9 +54,11 @@ class MyHashTable:
 
     # remove an item with matching key
     def remove(self, key):
+        # get bucket
         bucket = self.get_bucket(key)
         return bucket.pop(0)
 
+    # return the current # of items held
     def capacity(self):
         count = 0
         for row in self.table:
@@ -61,7 +66,7 @@ class MyHashTable:
                 count += 1
         return count
 
-    # string rep
+    # Print method to display for GUI
     def print(self):
         print("-----Packages-----")
         for row in self.table:

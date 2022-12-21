@@ -1,17 +1,15 @@
 import csv
+from models.Location import Location
 
-from Location import Location
-
-
-# a collection of Vertices and edges between
-# represents Locations and Distances
+# A Graph stores Locations as vertices and distances between locations as edges
+# used for calculating distance between Locations
 class Graph:
     def __init__(self):
         # initialize a dictionary to hold vertices
         self.adjacency_list = {}
         # initialize a dictionary to hold edges connecting vertices
         self.edge_weights = {}
-        # load the data upon creation of the class
+        # load the data and initialize the graph upon creation of the class
         self.load()
 
     # load the location data file
@@ -19,7 +17,7 @@ class Graph:
     # each Location object appears in the index that corresponds to its location id
     def load_location_data(self):
         # open the .csv file containing the location data
-        with open("WGUPS Location Table.csv") as file:
+        with open("static/WGUPS Location Table.csv") as file:
             # create a list of locations to return
             locations = []
             # create a dictionary reader object to iterate over each row
@@ -39,7 +37,7 @@ class Graph:
     # the index of the value list represents the id of the location that the distance is of
     def load_distance_data(self):
         # open the .csv file containing the distance data
-        with open("WGUPS Distance Table.csv") as file:
+        with open("static/WGUPS Distance Table.csv") as file:
             reader = csv.reader(file, delimiter=',')
             # skip the header row
             header = next(reader)
@@ -52,9 +50,9 @@ class Graph:
                 distances[int(row[0])] = distance_data
             return distances
 
-    # Accepts a list of Location objects and a dictionary of distances
-    # each location is added as a vertex
-    # each connection between locations is added as an edge
+    # Calls self methods to load list of Location objects and a dictionary of distances
+    # each location is added as a vertex in the graph
+    # each connection between vertices is added as an edge
     def load(self):
         locations = self.load_location_data()
         distances = self.load_distance_data()
@@ -97,12 +95,12 @@ class Graph:
         self.add_directed_edge(location_a, location_b, distance)
         self.add_directed_edge(location_b, location_a, distance)
 
+    # Given two string addresses, return the distance between them
     def distance_between(self, address_a, address_b):
         vertex_a = self.get_vertex_by_address(address_a)
         vertex_b = self.get_vertex_by_address(address_b)
         return self.edge_weights[(vertex_a, vertex_b)]
 
-    # I used this for debugging
     # check to ensure that all vertices and edges are working properly
     # there should be 27 distinct vertices (0 - 26); each should have a corresponding location
     # there should be 729 possible edges:

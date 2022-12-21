@@ -1,4 +1,4 @@
-# Each location corresponds to a delivery point
+# A Location corresponds to a delivery point of packages
 class Location:
     # A location has an id, name, street address, and zip code
     def __init__(self, id, name, street, zip):

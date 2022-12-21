@@ -1,4 +1,5 @@
-# A package to be delivered
+# A Package is to be delivered to a Location
+# delivery Location corresponds to address
 class Package:
     # each package has an id, address, city, state, zip, deadline, and weight
     def __init__(self, id, address, city, state, zip, deadline, weight):
