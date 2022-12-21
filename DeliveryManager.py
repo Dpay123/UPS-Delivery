@@ -1,12 +1,22 @@
+import csv
+
+from Graphs import Graph
+from Location import Location
+from MyHashTable import MyHashTable
 from Truck import Truck
 import datetime
 
+# This is the class that handles the main functionality of the program
+# Upon initialization, data is read from the .CSV and loaded into the manager
+# creates the package hash table and the distance graph
 class DeliveryManager:
-    def __init__(self, packages, graph):
-        # holds the inventory of packages
-        self.packages = packages
-        # holds the graph with the distance/location data
-        self.routes = graph
+    def __init__(self):
+        # create and load the inventory of packages
+        self.packages = MyHashTable(40)
+        self.packages.load_package_data()
+        # create and load the graph with the distance/location data
+        self.routes = Graph()
+
         # holds the mileage driven by trucks
         self.mileage = 0
         # create two trucks
@@ -24,8 +34,7 @@ class DeliveryManager:
         # load package to truck
         truck.load_package(p)
 
-
-    # Load of truck 1 and truck 2
+    # Load truck 1 and truck 2
     def load_first_trucks(self):
         # manual load packages to truck 1
         self.transfer_package_to_truck(1, self.truck1)

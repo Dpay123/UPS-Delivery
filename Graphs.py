@@ -1,3 +1,7 @@
+import csv
+
+from Location import Location
+
 
 # a collection of Vertices and edges between
 # represents Locations and Distances
@@ -7,6 +11,65 @@ class Graph:
         self.adjacency_list = {}
         # initialize a dictionary to hold edges connecting vertices
         self.edge_weights = {}
+        # load the data upon creation of the class
+        self.load()
+
+    # load the location data file
+    # returns a list of Location objects that each belong to a location
+    # each Location object appears in the index that corresponds to its location id
+    def load_location_data(self):
+        # open the .csv file containing the location data
+        with open("WGUPS Location Table.csv") as file:
+            # create a list of locations to return
+            locations = []
+            # create a dictionary reader object to iterate over each row
+            reader = csv.DictReader(file)
+            # iterate each row, parse the data, and create a new Location object
+            for row in reader:
+                location = Location(row["Id"].strip(),
+                                    row["Location"].strip(),
+                                    row["Street"].strip(),
+                                    row["Zip"].strip())
+                # store the Location object in the locations list
+                locations.append(location)
+        return locations
+
+    # load the distance data file
+    # returns a dictionary of location id (key) and distances to other location id (value)
+    # the index of the value list represents the id of the location that the distance is of
+    def load_distance_data(self):
+        # open the .csv file containing the distance data
+        with open("WGUPS Distance Table.csv") as file:
+            reader = csv.reader(file, delimiter=',')
+            # skip the header row
+            header = next(reader)
+            # create a dictionary to hold id of location and list of distances
+            distances = {}
+            for row in reader:
+                # separate the distances from the first cell and remove blanks
+                distance_data = [x for x in row[1:] if x != '']
+                # add to dictionary - id becomes key, distance list is value
+                distances[int(row[0])] = distance_data
+            return distances
+
+    # Accepts a list of Location objects and a dictionary of distances
+    # each location is added as a vertex
+    # each connection between locations is added as an edge
+    def load(self):
+        locations = self.load_location_data()
+        distances = self.load_distance_data()
+
+        # add each location as a vertex to the graph
+        for location in locations:
+            self.add_vertex(location)
+
+        # for each vertex, add an undirected edge to all vertices it connects to
+        for vertex in self.adjacency_list.keys():
+            # retrieve the associated list of connections of that location id
+            # will return a list such as [3.4, 5.6, ....]
+            connections = distances.get(vertex.id)
+            for idx, connection in enumerate(connections):
+                self.add_undirected_edge(vertex, self.get_vertex_by_id(idx), connection)
 
     # adds a vertex to the graph
     def add_vertex(self, location):
@@ -33,25 +96,6 @@ class Graph:
     def add_undirected_edge(self, location_a, location_b, distance = 1.0):
         self.add_directed_edge(location_a, location_b, distance)
         self.add_directed_edge(location_b, location_a, distance)
-
-    # given two string addresses, return the distance between them
-    # could be used to find the distance between the addresses of two packages
-
-    # Accepts a list of Location objects and a dictionary of distances
-    # each location is added as a vertex
-    # each connection between locations is added as an edge
-    def load(self, locations, distances):
-        # add each location as a vertex to the graph
-        for location in locations:
-            self.add_vertex(location)
-
-        # for each vertex, add an undirected edge to all vertices it connects to
-        for vertex in self.adjacency_list.keys():
-            # retrieve the associated list of connections of that location id
-            # will return a list such as [3.4, 5.6, ....]
-            connections = distances.get(vertex.id)
-            for idx, connection in enumerate(connections):
-                self.add_undirected_edge(vertex, self.get_vertex_by_id(idx), connection)
 
     def distance_between(self, address_a, address_b):
         vertex_a = self.get_vertex_by_address(address_a)
