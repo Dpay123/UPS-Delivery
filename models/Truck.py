@@ -16,10 +16,22 @@ class Truck:
         else :
             self.cargo.append(package)
 
-    def unload_package(self, address):
-        for package in self.cargo:
-            if package.address == self.location:
-                self.cargo.remove(package)
+    def unload_package(self, package):
+        package.status = "Delivered"
+        self.location = package.address
+        if package in self.priority_cargo:
+            self.priority_cargo.remove(package)
+        elif package in self.cargo:
+            self.cargo.remove(package)
+        else:
+            print("package not found")
+        print("delivered: " + str(package))
+
+    # given a package to deliver, simulate "traveling" to that destination
+    # unload the package at that destination
+    # update the truck location and mileage
+    def deliver(self, package):
+        self.location = package.address
 
     # prints an overview of the truck status, including name, location, packages held
     # then prints priority packages held

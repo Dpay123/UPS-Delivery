@@ -87,7 +87,7 @@ class Graph:
 
     # adds a directed edge between two vertices
     def add_directed_edge(self, from_location, to_location, distance = 1.0):
-        self.edge_weights[(from_location, to_location)] = distance
+        self.edge_weights[(from_location, to_location)] = float(distance)
         self.adjacency_list[from_location].append(to_location)
 
     # adds an undirected edge between two vertices
@@ -118,4 +118,4 @@ class Graph:
             count += 1
             if (v != 'O'):
                 print("From vertex %s to vertex %s: %s miles" % (k[0].id, k[1].id, v))
-        print("Count: 729 expexted, %s counted" % count)
+        print("Count: 729 expected, %s counted" % count)

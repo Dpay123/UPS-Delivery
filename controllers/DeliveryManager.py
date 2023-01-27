@@ -48,9 +48,35 @@ class DeliveryManager:
                 self.transfer_package_to_truck(i+1, truck)
         truck.name = "Truck 3"
 
+    # implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
+    # travel to the closest destination from each current destination until no more packages
+    # return the mileage traveled by the truck
     def truck_deliver_packages(self, truck):
-        # TODO
-        return
+        # deliver all priority packages
+        while len(truck.priority_cargo) > 0:
+            # get the package that has the next closest delivery address
+            next = self.next_closest(truck.location, truck.priority_cargo)
+            # "move" the truck to the next location and update mileage
+            self.mileage += self.routes.distance_between(truck.location, next.address)
+            # "deliver" the package
+            truck.unload_package(next)
+        # deliver all remaining packages
+        while len(truck.cargo) > 0:
+            next = self.next_closest(truck.location, truck.cargo)
+            self.mileage += self.routes.distance_between(truck.location, next.address)
+            truck.unload_package(next)
+
+    # From the trucks current location, determine the closest package delivery
+    # from the given list of packages held by the truck
+    def next_closest(self, truck_location, packages):
+        next = packages[0]
+        min_distance = self.routes.distance_between(truck_location, packages[0].address)
+        for p in packages:
+            p_distance = self.routes.distance_between(truck_location, p.address)
+            if p_distance < min_distance:
+                min_distance = p_distance
+                next = p
+        return next
 
     def status(self):
         self.hub.print()

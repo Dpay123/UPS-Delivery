@@ -8,6 +8,10 @@ if __name__ == '__main__':
 
     # implement functionality using manager
     dm.load_first_trucks()
-
+    dm.status()
+    print()
+    dm.truck_deliver_packages(dm.truck1)
+    print()
+    dm.truck_deliver_packages(dm.truck2)
     # print status
     dm.status()
