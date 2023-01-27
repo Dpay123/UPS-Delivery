@@ -14,5 +14,7 @@ if __name__ == '__main__':
     dm.truck_deliver_packages(dm.truck2)
 
     # test final truck delivery
+    dm.load_third_truck()
+    dm.truck_deliver_packages(dm.truck3)
 
     dm.status()

@@ -15,7 +15,7 @@ class DeliveryManager:
 
         # holds the mileage driven by trucks
         self.mileage = 0
-        # create two trucks
+        # create three trucks (in reality, the third truck will be whichever of truck 1/2 returns to hub)
         self.truck1 = Truck("Truck 1")
         self.truck2 = Truck("Truck 2")
 
@@ -40,13 +40,32 @@ class DeliveryManager:
         for id in truck2:
             self.transfer_package_to_truck(id, self.truck2)
 
-    # when either truck 1 or truck 2 returns, load the remaining packages onto that truck
-    def load_third_truck(self, truck):
+    # After truck 1/2 are done delivered, they currently reside at their last delivery point
+    # we want to recall the CLOSEST truck back to the hub to minimize mileage
+    def load_third_truck(self):
+        # identify which truck is closer and recall it
+        truck1_distance_to_hub = self.routes.distance_between("4001 South 700 East", self.truck1.location)
+        truck2_distance_to_hub = self.routes.distance_between("4001 South 700 East", self.truck2.location)
+        recall_distance = 0
+
+        if truck1_distance_to_hub < truck2_distance_to_hub:
+            self.truck3 = self.truck1
+            recall_distance += truck1_distance_to_hub
+        else:
+            self.truck3 = self.truck2
+            recall_distance += truck2_distance_to_hub
+
+        # change the name of the truck to be recalled for printing methods
+        self.truck3.name = "Truck 3"
+
+        # Bring that truck back to the hub
+        self.truck3.location = "4001 South 700 East"
+        self.mileage += recall_distance
+
         # simply load the remaining packages at hub
         for i in range(40):
             if self.hub.table[i]:
-                self.transfer_package_to_truck(i+1, truck)
-        truck.name = "Truck 3"
+                self.transfer_package_to_truck(i+1, self.truck3)
 
     # implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
     # travel to the closest destination from each current destination until no more packages
