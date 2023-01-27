@@ -82,5 +82,5 @@ class DeliveryManager:
         self.hub.print()
         self.truck1.print()
         self.truck2.print()
-        print("Miles Traveled: %d" % self.mileage)
+        print("Miles Traveled: %f" % self.mileage)
         print()
