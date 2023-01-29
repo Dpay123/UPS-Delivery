@@ -58,47 +58,29 @@ class DeliveryManager:
         # change the name of the truck to be recalled for printing methods
         self.truck3.name = "Truck 3"
 
-        # Bring that truck back to the hub
+        # Bring that truck back to the hub and reset its mileage and deliveries
         self.truck3.location = "4001 South 700 East"
         self.mileage += recall_distance
+        self.truck3.mileage = 0
+        self.truck3.delivered.clear()
 
         # simply load the remaining packages at hub
         for i in range(40):
             if self.hub.table[i]:
                 self.transfer_package_to_truck(i+1, self.truck3)
 
-    # implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
-    # travel to the closest destination from each current destination until no more packages
-    # return the mileage traveled by the truck
-    def truck_deliver_packages(self, truck):
-        # deliver all priority packages
-        while len(truck.priority_cargo) > 0:
-            # get the package that has the next closest delivery address
-            next = self.next_closest(truck.location, truck.priority_cargo)
-            # "move" the truck to the next location and update mileage
-            self.mileage += self.routes.distance_between(truck.location, next.address)
-            # "deliver" the package
-            truck.unload_package(next)
-        # deliver all remaining packages
-        while len(truck.cargo) > 0:
-            next = self.next_closest(truck.location, truck.cargo)
-            self.mileage += self.routes.distance_between(truck.location, next.address)
-            truck.unload_package(next)
-
-    # From the trucks current location, determine the closest package delivery
-    # from the given list of packages held by the truck
-    def next_closest(self, truck_location, packages):
-        next = packages[0]
-        min_distance = self.routes.distance_between(truck_location, packages[0].address)
-        for p in packages:
-            p_distance = self.routes.distance_between(truck_location, p.address)
-            if p_distance < min_distance:
-                min_distance = p_distance
-                next = p
-        return next
+    def run(self):
+        self.truck1.deliver()
+        self.truck2.deliver()
+        self.mileage += self.truck1.mileage + self.truck2.mileage
+        self.load_third_truck()
+        self.truck3.deliver()
+        self.mileage += self.truck3.mileage
+        self.status()
 
     def status(self):
-        self.hub.print()
+        if self.hub:
+            self.hub.print()
         self.truck1.print()
         self.truck2.print()
         print("Miles Traveled: %f" % self.mileage)
