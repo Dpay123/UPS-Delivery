@@ -1,3 +1,5 @@
+import datetime
+
 from models.Graph import Graph
 
 # A Truck loads, holds and delivers Packages
@@ -15,6 +17,7 @@ class Truck:
         self.priority_cargo = []
         self.cargo = []
         self.delivered = []
+        self.embark_mileage = 0
         self.mileage = 0
         self.routes = Graph()
 
@@ -36,14 +39,25 @@ class Truck:
             packages = self.cargo
 
         # change package status to mark delivery
-        package.status = "Delivered at %f miles" % (self.mileage)
+        package.status = "Delivered at %s" % (self.time_at_miles(self.mileage + self.embark_mileage))
         # transfer package from held cargo to delivered cargo
         packages.remove(package)
         self.delivered.append(package)
 
+    def time_at_miles(self, miles):
+        # start all times at 8am offset
+        time = 8
+        # calculate additional mileage
+        time += miles / 18;
+        return str(datetime.timedelta(hours=time))
+
+
+    # when delivery begins, mark the embark mileage (used to calculate individual time of delivery
     # implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
     # travel to the closest destination from each current destination until no more packages
-    def deliver(self):
+    def deliver(self, embark_mileage):
+        # set embark mileage
+        self.embark_mileage += embark_mileage
         # deliver priority packages first
         while len(self.priority_cargo) > 0:
             # get the package that has the next closest delivery
@@ -75,8 +89,8 @@ class Truck:
     # print an overview of the truck status
     def print(self):
         # print truck overview
-        print("%s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
-              % (self.name, self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
+        print("%s | Embarked: %s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
+              % (self.name, self.time_at_miles(self.embark_mileage), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
         # if priority cargo present, print
         if self.priority_cargo:
             print("Priority Cargo:")

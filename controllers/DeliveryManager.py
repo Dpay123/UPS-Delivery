@@ -51,11 +51,13 @@ class DeliveryManager:
         truck2_distance_to_hub = self.routes.distance_between("4001 South 700 East", self.truck2.location)
 
         if truck1_distance_to_hub < truck2_distance_to_hub:
-            self.mileage += truck1_distance_to_hub
+            self.truck1.mileage += truck1_distance_to_hub
             self.truck1.location = "4001 South 700 East"
+            self.mileage += self.truck1.mileage
         else:
-            self.mileage += truck2_distance_to_hub
+            self.truck2.mileage += truck2_distance_to_hub
             self.truck2.location = "4001 South 700 East"
+            self.mileage += self.truck2.mileage
 
         # load the remaining packages at hub
         for i in range(40):
@@ -63,18 +65,21 @@ class DeliveryManager:
                 self.transfer_package_to_truck(i+1, self.truck3)
 
     # calculate the time elapsed based upon mileage traveled
-    def timeAtMiles(self, miles):
+    def time_at_miles(self, miles):
         time = miles / 18
-        return str(datetime.timedelta(hours=time))
+        return str(datetime.timedelta(hours=time+8))
 
     def run(self):
         self.load_first_trucks()
-        self.truck1.deliver()
-        self.truck2.deliver()
-        self.mileage += self.truck1.mileage + self.truck2.mileage
+        # truck 1 starts delivery at 0 offset (8am)
+        self.truck1.deliver(0)
+        # truck 2 starts delivery at 19.5 offset (9:05am)
+        self.truck2.deliver(19.5)
         self.load_third_truck()
-        self.truck3.deliver()
-        self.mileage += self.truck3.mileage
+        # truck 3 starts at offset of mileage of first returned truck
+        self.truck3.deliver(self.mileage)
+        # total mileage of all trucks
+        self.mileage = self.truck1.mileage + self.truck2.mileage + self.truck3.mileage
         self.status()
 
     def status(self):
@@ -84,4 +89,4 @@ class DeliveryManager:
         self.truck2.print()
         self.truck3.print()
         print("Miles Traveled: %f" % self.mileage)
-        print()
+        print("Deliveries Completed by: %s" % self.time_at_miles(self.mileage))

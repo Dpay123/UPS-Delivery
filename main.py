@@ -8,6 +8,3 @@ if __name__ == '__main__':
 
     # TEST: delivery via truck functionality
     dm.run()
-
-    # TEST: time
-    print(dm.timeAtMiles(116.80000))
