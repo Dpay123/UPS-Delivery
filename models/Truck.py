@@ -16,6 +16,7 @@ class Truck:
         # cargo to hold packages
         self.priority_cargo = []
         self.cargo = []
+        self.delayed_cargo = []
         self.delivered = []
         self.embark_mileage = 0
         self.mileage = 0
@@ -24,7 +25,9 @@ class Truck:
     # check package priority and load onto truck from hub
     # a package has priority if it has a delivery requirement such as time
     def load_package(self, package):
-        if package.deadline != "EOD":
+        if package.deadline == "DELAY":
+            self.delayed_cargo.append(package)
+        elif package.deadline != "EOD":
             self.priority_cargo.append(package)
         else:
             self.cargo.append(package)
@@ -35,8 +38,10 @@ class Truck:
         # priority packages are always delivered first; if none, then regular cargo is delivered
         if self.priority_cargo:
             packages = self.priority_cargo
-        else:
+        elif self.cargo:
             packages = self.cargo
+        else:
+            packages = self.delayed_cargo
 
         # change package status to mark delivery
         package.status = "Delivered at %s" % (self.time_at_miles(self.mileage + self.embark_mileage))
@@ -67,9 +72,16 @@ class Truck:
             self.location = next.address
             # "deliver" the package
             self.unload_package(next)
-        # deliver all remaining packages
+        # deliver regular packages
         while len(self.cargo) > 0:
             next = self.next_closest(self.location, self.cargo)
+            self.mileage += self.routes.distance_between(self.location, next.address)
+            self.location = next.address
+            # "deliver" the package
+            self.unload_package(next)
+        # deliver delayed packages
+        while len(self.delayed_cargo) > 0:
+            next = self.next_closest(self.location, self.delayed_cargo)
             self.mileage += self.routes.distance_between(self.location, next.address)
             self.location = next.address
             # "deliver" the package
@@ -101,6 +113,11 @@ class Truck:
             print("Cargo:")
             for p in range(len(self.cargo)):
                 print("---package", self.cargo[p])
+        # if delayed cargo present, print
+        if self.delayed_cargo:
+            print("Delayed cargo:")
+            for p in range(len(self.delayed_cargo)):
+                print("---package", self.delayed_cargo[p])
         # if delivered cargo present, print
         if self.delivered:
             print("Delivered:")

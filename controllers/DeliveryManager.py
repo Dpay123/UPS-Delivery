@@ -89,4 +89,4 @@ class DeliveryManager:
         self.truck2.print()
         self.truck3.print()
         print("Miles Traveled: %f" % self.mileage)
-        print("Deliveries Completed by: %s" % self.time_at_miles(self.mileage))
+        print("Deliveries Completed by: %s" % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage))

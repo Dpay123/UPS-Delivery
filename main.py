@@ -5,6 +5,5 @@ if __name__ == '__main__':
 
     # create a DeliveryManager
     dm = DeliveryManager()
-
     # TEST: delivery via truck functionality
     dm.run()
