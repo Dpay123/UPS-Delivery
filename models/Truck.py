@@ -45,6 +45,7 @@ class Truck:
 
         # change package status to mark delivery
         package.status = "Delivered at %s" % (self.time_at_miles(self.mileage + self.embark_mileage))
+
         # transfer package from held cargo to delivered cargo
         packages.remove(package)
         self.delivered.append(package)
@@ -98,29 +99,32 @@ class Truck:
                 next = p
         return next
 
+    def get_stats(self):
+        print("%s | Embarked: %s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
+              % (self.name, self.time_at_miles(self.embark_mileage), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
+
     # print an overview of the truck status
     def print(self):
         # print truck overview
-        print("%s | Embarked: %s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
-              % (self.name, self.time_at_miles(self.embark_mileage), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
+        self.get_stats()
         # if priority cargo present, print
         if self.priority_cargo:
             print("Priority Cargo:")
             for p in range(len(self.priority_cargo)):
-                print("---package", self.priority_cargo[p])
+                print("-", self.priority_cargo[p])
         # if regular cargo present, print
         if self.cargo:
             print("Cargo:")
             for p in range(len(self.cargo)):
-                print("---package", self.cargo[p])
+                print("-", self.cargo[p])
         # if delayed cargo present, print
         if self.delayed_cargo:
             print("Delayed cargo:")
             for p in range(len(self.delayed_cargo)):
-                print("---package", self.delayed_cargo[p])
+                print("-", self.delayed_cargo[p])
         # if delivered cargo present, print
         if self.delivered:
             print("Delivered:")
             for p in self.delivered:
-                print("---package " + str(p.id) + ": " + p.status)
+                print(p)
         print()

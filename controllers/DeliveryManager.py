@@ -83,10 +83,17 @@ class DeliveryManager:
         self.status()
 
     def status(self):
-        if self.hub:
-            self.hub.print()
-        self.truck1.print()
-        self.truck2.print()
-        self.truck3.print()
+        self.truck1.get_stats()
+        self.truck2.get_stats()
+        self.truck3.get_stats()
         print("Miles Traveled: %f" % self.mileage)
         print("Deliveries Completed by: %s" % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage))
+        breakdown = input("Would you like to see a complete breakdown of the packages delivered? (enter 'y' or 'n') ")
+        if breakdown == "y":
+            self.truck1.print()
+            self.truck2.print()
+            self.truck3.print()
+            print("Miles Traveled: %f" % self.mileage)
+            print("Deliveries Completed by: %s" % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage))
+        else:
+            print("Simulation Completed...Returning to Main Menu")

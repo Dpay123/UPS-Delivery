@@ -1,6 +1,7 @@
 import csv
 from models.Package import Package
 
+# E: DATA STRUCTURE
 # A MyHashTable stores Packages at the hub by package id
 # Packages are transferred from this data structure to the trucks for delivery
 class MyHashTable:
