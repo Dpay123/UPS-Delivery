@@ -66,8 +66,9 @@ class DeliveryManager:
 
     # calculate the time elapsed based upon mileage traveled
     def time_at_miles(self, miles):
-        time = miles / 18
-        return str(datetime.timedelta(hours=time+8))
+        travel_time = datetime.timedelta(hours=miles/18)
+        start_time = datetime.datetime(year=1900, month=1, day=1, hour=8, minute=0)
+        return start_time + travel_time
 
     def run(self):
         self.load_first_trucks()
@@ -80,20 +81,48 @@ class DeliveryManager:
         self.truck3.deliver(self.mileage)
         # total mileage of all trucks
         self.mileage = self.truck1.mileage + self.truck2.mileage + self.truck3.mileage
-        self.status()
 
     def status(self):
+        print("-----Delivery Summary-----")
+        print("Miles Traveled: %f" % self.mileage)
+        print("Deliveries Completed by: %s"
+              % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage).strftime("%H:%M"))
+        print()
         self.truck1.get_stats()
         self.truck2.get_stats()
         self.truck3.get_stats()
-        print("Miles Traveled: %f" % self.mileage)
-        print("Deliveries Completed by: %s" % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage))
+        print()
+
         breakdown = input("Would you like to see a complete breakdown of the packages delivered? (enter 'y' or 'n') ")
+        print()
+
         if breakdown == "y":
+            print("-----Delivery Summary-----")
+            print("Miles Traveled: %f" % self.mileage)
+            print("Deliveries Completed by: %s"
+                  % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage).strftime("%H:%M"))
+            print()
             self.truck1.print()
             self.truck2.print()
             self.truck3.print()
-            print("Miles Traveled: %f" % self.mileage)
-            print("Deliveries Completed by: %s" % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage))
         else:
             print("Simulation Completed...Returning to Main Menu")
+
+    # Return each package status at the given time
+    # Each Package can either be at the hub, loaded/inroute, or delivered
+    def status_with_time(self, time):
+        packages = []
+        for truck in [self.truck1, self.truck2, self.truck3]:
+            load_time = self.time_at_miles(truck.embark_mileage)
+            for package in truck.delivered:
+                if time < load_time:
+                    package.status = "At the Hub"
+                elif time < package.delivered_at:
+                    package.status = "En route via %s" % truck.name
+            packages += truck.delivered
+
+        packages.sort(key=lambda p: p.id)
+
+        print("-----Package Summary at %s-----" % time.strftime("%H:%M"))
+        for p in packages:
+            print("ID: %s | Status: %s" % (p.id, p.status))

@@ -1,4 +1,5 @@
 # Dominic Payer, ID: 010482349
+from datetime import datetime
 
 from controllers.DeliveryManager import DeliveryManager
 
@@ -21,19 +22,21 @@ if __name__ == '__main__':
         print()
 
         if choice == "1":
-            print("Simulating delivery.....")
             # run the complete program
             dm.run()
+            dm.status()
         elif choice == "2":
-            id = input("Enter a package ID from 1-40: ")
-            time = input("Enter a time in HH:MM format: ")
-            id = int(id)
             # run the program and report the status of given package at given time
             # TODO: dm.run(id, time)
+            pass
         elif choice == "3":
             time = input("Enter a time in HH:MM format: ")
+            time_search = datetime.strptime(time, '%H:%M')
             # run the program and report overall status at given time
-            # TODO: dm.run(time)
+            dm.run()
+            print()
+            dm.status_with_time(time_search)
+
         elif choice == "4":
             break
 

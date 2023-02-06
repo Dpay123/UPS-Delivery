@@ -44,25 +44,25 @@ class Truck:
             packages = self.delayed_cargo
 
         # change package status to mark delivery
-        package.status = "Delivered at %s" % (self.time_at_miles(self.mileage + self.embark_mileage))
+        package.delivered_at = self.time_at_miles(self.mileage + self.embark_mileage)
+        package.status = "Delivered by %s at %s" % (self.name, package.delivered_at.strftime("%H:%M"))
 
         # transfer package from held cargo to delivered cargo
         packages.remove(package)
         self.delivered.append(package)
 
+    # calculate the time elapsed based upon mileage traveled
     def time_at_miles(self, miles):
-        # start all times at 8am offset
-        time = 8
-        # calculate additional mileage
-        time += miles / 18;
-        return str(datetime.timedelta(hours=time))
+        travel_time = datetime.timedelta(hours=miles / 18)
+        start_time = datetime.datetime(year=1900, month=1, day=1, hour=8, minute=0)
+        return start_time + travel_time
 
 
     # when delivery begins, mark the embark mileage (used to calculate individual time of delivery
     # implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
     # travel to the closest destination from each current destination until no more packages
     def deliver(self, embark_mileage):
-        # set embark mileage
+        # set embark mileage of trucks and
         self.embark_mileage += embark_mileage
         # deliver priority packages first
         while len(self.priority_cargo) > 0:
@@ -101,30 +101,14 @@ class Truck:
 
     def get_stats(self):
         print("%s | Embarked: %s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
-              % (self.name, self.time_at_miles(self.embark_mileage), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
+              % (self.name, self.time_at_miles(self.embark_mileage).strftime("%H:%M"), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
 
     # print an overview of the truck status
     def print(self):
         # print truck overview
         self.get_stats()
-        # if priority cargo present, print
-        if self.priority_cargo:
-            print("Priority Cargo:")
-            for p in range(len(self.priority_cargo)):
-                print("-", self.priority_cargo[p])
-        # if regular cargo present, print
-        if self.cargo:
-            print("Cargo:")
-            for p in range(len(self.cargo)):
-                print("-", self.cargo[p])
-        # if delayed cargo present, print
-        if self.delayed_cargo:
-            print("Delayed cargo:")
-            for p in range(len(self.delayed_cargo)):
-                print("-", self.delayed_cargo[p])
-        # if delivered cargo present, print
-        if self.delivered:
-            print("Delivered:")
-            for p in self.delivered:
-                print(p)
+        # print sorted packages
+        self.delivered.sort(key=lambda x: x.id)
+        for p in self.delivered:
+            print(p)
         print()
