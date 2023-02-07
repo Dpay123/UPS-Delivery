@@ -36,27 +36,28 @@ class Truck:
 
     # transfer a package from held cargo to delivered cargo, simulating "delivery"
     def unload_package(self, package, p_list):
-        # change package status to mark delivery
+        # calculate simulated "time" based upon mileage and update the package status
         package.delivered_at = self.time_at_miles(self.mileage + self.embark_mileage)
         package.status = "Delivered by %s at %s" % (self.name, package.delivered_at.strftime("%H:%M"))
         # transfer package from held cargo to delivered cargo
         p_list.remove(package)
         self.delivered.append(package)
 
-    # calculate the time elapsed based upon mileage traveled
+    # return a datetime object representation of a time based upon mileage traveled
     def time_at_miles(self, miles):
+        # calculate hours elapsed based upon known speed of 18mph
         travel_time = datetime.timedelta(hours=miles / 18)
+        # the start time is given to us as 8am
         start_time = datetime.datetime(year=1900, month=1, day=1, hour=8, minute=0)
         return start_time + travel_time
 
-
-    # when delivery begins, mark the embark mileage (used to calculate individual time of delivery
-    # implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
-    # travel to the closest destination from each current destination until no more packages
+    # Implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
+    # Each package held is delivered on a nearest distance basis until all packages have been delivered
+    # the parameter embark_mileage is passed in to mimic the "embark time" and will be used to calculate delivery times
     def deliver(self, embark_mileage):
-        # set embark mileage of trucks and
+        # set embark mileage of trucks
         self.embark_mileage = embark_mileage
-        # deliver all packages
+        # deliver all packages in order of priority-->cargo-->delayed
         for p_list in [self.priority_cargo, self.cargo, self.delayed_cargo]:
             while len(p_list) > 0:
                 # get the package that has the next closest delivery
@@ -67,7 +68,9 @@ class Truck:
                 # "deliver" the package
                 self.unload_package(next, p_list)
 
-    # return the package with delivery to the closest location from the current truck location
+    # Return the package with the closest location from the current truck location
+    # The parameter packages is used to pass in distinct cargo lists (priority, cargo, delayed)
+    # This is the core of the Greedy Algorithm - always searches for the next most optimal path
     def next_closest(self, location, packages):
         next = packages[0]
         min_distance = self.routes.distance_between(location, packages[0].address)
@@ -78,15 +81,16 @@ class Truck:
                 next = p
         return next
 
+    # Return a string representation of condensed truck status
     def get_stats(self):
         print("%s | Embarked: %s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
               % (self.name, self.time_at_miles(self.embark_mileage).strftime("%H:%M"), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
 
-    # print an overview of the truck status
+    # Print expanded truck status
     def print(self):
-        # print truck overview
+        # print condensed truck status
         self.get_stats()
-
+        # print packages on truck
         for p in self.delivered:
             print(p)
         print()
