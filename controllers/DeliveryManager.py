@@ -126,3 +126,19 @@ class DeliveryManager:
         print("-----Package Summary at %s-----" % time.strftime("%H:%M"))
         for p in packages:
             print("ID: %s | Status: %s" % (p.id, p.status))
+
+    def package_status(self, id, time):
+
+        for truck in [self.truck1, self.truck2, self.truck3]:
+            packages = truck.delivered
+            for p in packages:
+                if p.id == id:
+                    load_time = self.time_at_miles(truck.embark_mileage)
+                    if time < load_time:
+                        p.status = "At the Hub"
+                    elif time < p.delivered_at:
+                        p.status = "En route via %s" % truck.name
+                    print("-----Package %d Status at %s-----" % (id, time.strftime("%H:%M")))
+                    print("ID: %s | Status: %s" % (p.id, p.status))
+                    return
+        print("Package not found")

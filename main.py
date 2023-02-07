@@ -26,9 +26,14 @@ if __name__ == '__main__':
             dm.run()
             dm.status()
         elif choice == "2":
+            id = input("Enter a package id from 1-40: ")
+            id_search = int(id)
+            time = input("Enter a time in HH:MM format: ")
+            time_search = datetime.strptime(time, '%H:%M')
             # run the program and report the status of given package at given time
-            # TODO: dm.run(id, time)
-            pass
+            dm.run()
+            print()
+            dm.package_status(id_search, time_search)
         elif choice == "3":
             time = input("Enter a time in HH:MM format: ")
             time_search = datetime.strptime(time, '%H:%M')
