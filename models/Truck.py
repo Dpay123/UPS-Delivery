@@ -35,22 +35,12 @@ class Truck:
             self.cargo.append(package)
 
     # transfer a package from held cargo to delivered cargo, simulating "delivery"
-    def unload_package(self, package):
-        # priority packages are always delivered first; if none, then regular cargo; if none, then delayed cargo
-        packages = []
-        if self.priority_cargo:
-            packages = self.priority_cargo
-        elif self.cargo:
-            packages = self.cargo
-        else:
-            packages = self.delayed_cargo
-
+    def unload_package(self, package, p_list):
         # change package status to mark delivery
         package.delivered_at = self.time_at_miles(self.mileage + self.embark_mileage)
         package.status = "Delivered by %s at %s" % (self.name, package.delivered_at.strftime("%H:%M"))
-
         # transfer package from held cargo to delivered cargo
-        packages.remove(package)
+        p_list.remove(package)
         self.delivered.append(package)
 
     # calculate the time elapsed based upon mileage traveled
@@ -65,30 +55,17 @@ class Truck:
     # travel to the closest destination from each current destination until no more packages
     def deliver(self, embark_mileage):
         # set embark mileage of trucks and
-        self.embark_mileage += embark_mileage
-        # deliver priority packages first
-        while len(self.priority_cargo) > 0:
-            # get the package that has the next closest delivery
-            next = self.next_closest(self.location, self.priority_cargo)
-            # "move" the truck to the next location and update mileage
-            self.mileage += self.routes.distance_between(self.location, next.address)
-            self.location = next.address
-            # "deliver" the package
-            self.unload_package(next)
-        # deliver regular packages
-        while len(self.cargo) > 0:
-            next = self.next_closest(self.location, self.cargo)
-            self.mileage += self.routes.distance_between(self.location, next.address)
-            self.location = next.address
-            # "deliver" the package
-            self.unload_package(next)
-        # deliver delayed packages
-        while len(self.delayed_cargo) > 0:
-            next = self.next_closest(self.location, self.delayed_cargo)
-            self.mileage += self.routes.distance_between(self.location, next.address)
-            self.location = next.address
-            # "deliver" the package
-            self.unload_package(next)
+        self.embark_mileage = embark_mileage
+        # deliver all packages
+        for p_list in [self.priority_cargo, self.cargo, self.delayed_cargo]:
+            while len(p_list) > 0:
+                # get the package that has the next closest delivery
+                next = self.next_closest(self.location, p_list)
+                # "move" the truck to the next location and update mileage
+                self.mileage += self.routes.distance_between(self.location, next.address)
+                self.location = next.address
+                # "deliver" the package
+                self.unload_package(next, p_list)
 
     # return the package with delivery to the closest location from the current truck location
     def next_closest(self, location, packages):
