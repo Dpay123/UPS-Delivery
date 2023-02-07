@@ -9,7 +9,7 @@ class Graph:
         self.adjacency_list = {}
         # initialize a dictionary to hold edges connecting vertices
         self.edge_weights = {}
-        # load the data and initialize the graph upon creation of the class
+        # load the data and initialize the graph upon creation of the Graph object
         self.load()
 
     # load the location data file

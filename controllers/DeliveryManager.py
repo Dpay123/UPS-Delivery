@@ -5,7 +5,7 @@ from models.Graph import Graph
 from models.MyHashTable import MyHashTable
 from models.Truck import Truck
 
-# This is the class that handles the main functionality of the program
+# This is the class that delivers the main functionality of the program
 # Upon initialization, data is read from the .CSV and loaded into the manager
 # creates the package hash table and the distance graph
 class DeliveryManager:
@@ -31,7 +31,8 @@ class DeliveryManager:
         # load package to truck
         truck.load_package(p)
 
-    # Load truck 1 and truck 2
+    # Load truck 1 and truck 2 based upon manual determination
+    # NOTE: future improvement possible by developing a self-adjusting loading algorithm
     def load_first_trucks(self):
         # manual load packages to truck 1
         truck1 = [1, 2, 5, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 33, 40]
@@ -64,54 +65,58 @@ class DeliveryManager:
             if self.hub.table[i]:
                 self.transfer_package_to_truck(i+1, self.truck3)
 
-    # calculate the time elapsed based upon mileage traveled
+    # return a datetime object representation of a time based upon mileage traveled
     def time_at_miles(self, miles):
-        travel_time = datetime.timedelta(hours=miles/18)
+        # calculate hours elapsed based upon known speed of 18mph
+        travel_time = datetime.timedelta(hours=miles / 18)
+        # the start time is given to us as 8am
         start_time = datetime.datetime(year=1900, month=1, day=1, hour=8, minute=0)
         return start_time + travel_time
 
+    # Simulate total delivery of all packages
     def run(self):
         self.load_first_trucks()
         # truck 1 starts delivery at 0 offset (8am)
         self.truck1.deliver(0)
         # truck 2 starts delivery at 19.5 offset (9:05am)
         self.truck2.deliver(19.5)
+        # truck 3 starts delivery after truck 1 and 2
         self.load_third_truck()
         # truck 3 starts at offset of mileage of first returned truck
         self.truck3.deliver(self.mileage)
         # total mileage of all trucks
         self.mileage = self.truck1.mileage + self.truck2.mileage + self.truck3.mileage
 
-    def status(self):
+    # print a condensed summary of the delivery
+    def print_summary(self):
         print("-----Delivery Summary-----")
         print("Miles Traveled: %f" % self.mileage)
-        print("Deliveries Completed by: %s"
+        print("Deliveries Completed by: %s\n"
               % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage).strftime("%H:%M"))
-        print()
+
+    # GUI option to print either condensed or expanded summary
+    def status(self):
+        self.print_summary()
         self.truck1.get_stats()
         self.truck2.get_stats()
         self.truck3.get_stats()
         print()
 
         breakdown = input("Would you like to see a complete breakdown of the packages delivered? (enter 'y' or 'n') ")
-        print()
 
         if breakdown == "y":
-            print("-----Delivery Summary-----")
-            print("Miles Traveled: %f" % self.mileage)
-            print("Deliveries Completed by: %s"
-                  % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage).strftime("%H:%M"))
-            print()
+            self.print_summary()
             self.truck1.print()
             self.truck2.print()
             self.truck3.print()
         else:
             print("Simulation Completed...Returning to Main Menu")
 
-    # Return each package status at the given time
-    # Each Package can either be at the hub, loaded/inroute, or delivered
+    # Set each package status at the given time
+    # Each Package can either be at the hub, loaded/en route, or delivered
     def status_with_time(self, time):
         packages = []
+        # go through delivered packages of each truck and set each package status based upon the time
         for truck in [self.truck1, self.truck2, self.truck3]:
             load_time = self.time_at_miles(truck.embark_mileage)
             for package in truck.delivered:
@@ -121,14 +126,15 @@ class DeliveryManager:
                     package.status = "En route via %s" % truck.name
             packages += truck.delivered
 
+        # sort the packages based upon id for cleaner look
         packages.sort(key=lambda p: p.id)
 
         print("-----Package Summary at %s-----" % time.strftime("%H:%M"))
         for p in packages:
             print(p)
 
+    # Set the given package (based upon input id) status at the given time
     def package_status(self, id, time):
-
         for truck in [self.truck1, self.truck2, self.truck3]:
             packages = truck.delivered
             for p in packages:

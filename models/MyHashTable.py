@@ -1,9 +1,10 @@
 import csv
 from models.Package import Package
 
-# E: DATA STRUCTURE
+# DATA STRUCTURE
 # A MyHashTable stores Packages at the hub by package id
 # Packages are transferred from this data structure to the trucks for delivery
+# Designed for 1-to-1 mapping with no collisions based upon the initial capacity provided (ex. 40 packages)
 class MyHashTable:
     def __init__(self, initial_capacity):
         # initialize table
@@ -12,7 +13,7 @@ class MyHashTable:
         for i in range(initial_capacity):
             self.table.append([])
 
-    # Loads the package data into a hashtable
+    # Loads the package data from .csv into the hashtable
     def load_package_data(self):
         # open the .csv file containing the package info
         with open("static/WGUPS Package File.csv") as file:
@@ -36,14 +37,14 @@ class MyHashTable:
         # retrieve bucket
         return self.table[bucket]
 
-    # Insert an item
+    # Insert an item into the hash table
     def insert(self, item):
         # get bucket
         bucket = self.get_bucket(item.id)
         # insert item into bucket
         bucket.append(item)
 
-    # Search for item by specifying the key
+    # Search for item by specifying the key (Package id)
     def search(self, key):
         # get bucket
         bucket = self.get_bucket(key)
