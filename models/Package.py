@@ -20,10 +20,10 @@ class Package:
     # return a string representation of the package for GUI
     def __str__(self):
         return "ID: %s " \
-               "| Address: %s " \
+               "| %s " \
                "| Deadline: %s " \
-               "| Weight: %s " \
-               "| Status: %s " % (self.id,
+               "| Wt: %s " \
+               "| %s " % (self.id,
                                  self.address + ", " + self.city + ", " + self.state + " " + self.zip,
                                  self.deadline,
                                  self.weight,

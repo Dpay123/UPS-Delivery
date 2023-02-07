@@ -94,23 +94,13 @@ class DeliveryManager:
         print("Deliveries Completed by: %s\n"
               % self.time_at_miles(self.truck3.mileage + self.truck3.embark_mileage).strftime("%H:%M"))
 
-    # GUI option to print either condensed or expanded summary
+    # GUI option to print summary
     def status(self):
         self.print_summary()
-        self.truck1.get_stats()
-        self.truck2.get_stats()
-        self.truck3.get_stats()
-        print()
-
-        breakdown = input("Would you like to see a complete breakdown of the packages delivered? (enter 'y' or 'n') ")
-
-        if breakdown == "y":
-            self.print_summary()
-            self.truck1.print()
-            self.truck2.print()
-            self.truck3.print()
-        else:
-            print("Simulation Completed...Returning to Main Menu")
+        self.truck1.print()
+        self.truck2.print()
+        self.truck3.print()
+        print("Simulation Completed...Returning to Main Menu")
 
     # Set each package status at the given time
     # Each Package can either be at the hub, loaded/en route, or delivered

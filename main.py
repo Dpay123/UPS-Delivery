@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     # GUI
     while True:
-        # create a DeliveryManager
+        # create a DeliveryManager each time the main menu is returned to
         dm = DeliveryManager()
 
         # Display Menu
@@ -28,15 +28,15 @@ if __name__ == '__main__':
         elif choice == "2":
             id = input("Enter a package id from 1-40: ")
             id_search = int(id)
-            time = input("Enter a time in HH:MM format: ")
-            time_search = datetime.strptime(time, '%H:%M')
+            time = input("Enter a time in HHMM format (ex. '1049'): ")
+            time_search = datetime.strptime(time, '%H%M')
             # run the program and report the status of given package at given time
             dm.run()
             print()
             dm.package_status(id_search, time_search)
         elif choice == "3":
-            time = input("Enter a time in HH:MM format: ")
-            time_search = datetime.strptime(time, '%H:%M')
+            time = input("Enter a time in HHMM format (ex. '1049'): ")
+            time_search = datetime.strptime(time, '%H%M')
             # run the program and report overall status at given time
             dm.run()
             print()
@@ -46,4 +46,3 @@ if __name__ == '__main__':
             break
 
     print("Exiting Program")
-
