@@ -3,24 +3,26 @@ import datetime
 from models.Graph import Graph
 
 # A Truck loads, holds and delivers Packages
-# Packages are loaded at the hub as priority or regular cargo
+# Packages are loaded at the hub as priority, regular cargo, or delayed
 # As a truck delivers packages, it accumulates Mileage
 # Mileage is determined based on the routes between the locations
 class Truck:
     # each truck has a current location, and all trucks start at the hub with 0 mileage
     # delivered packages are kept track of in a list
     # distance is calculated using a graph of loaded location data
+    # each truck has access to a Graph for planning routes/distances
     def __init__(self, name):
         self.name = name
         self.location = "4001 South 700 East"
-        # cargo to hold packages
+        # embark mileage will be assigned on truck delivery
+        self.embark_mileage = 0
+        self.mileage = 0
+        self.routes = Graph()
+        # lists to hold packages
         self.priority_cargo = []
         self.cargo = []
         self.delayed_cargo = []
         self.delivered = []
-        self.embark_mileage = 0
-        self.mileage = 0
-        self.routes = Graph()
 
     # check package priority and load onto truck from hub
     # a package has priority if it has a delivery requirement such as time
@@ -34,8 +36,8 @@ class Truck:
 
     # transfer a package from held cargo to delivered cargo, simulating "delivery"
     def unload_package(self, package):
+        # priority packages are always delivered first; if none, then regular cargo; if none, then delayed cargo
         packages = []
-        # priority packages are always delivered first; if none, then regular cargo is delivered
         if self.priority_cargo:
             packages = self.priority_cargo
         elif self.cargo:
@@ -107,8 +109,7 @@ class Truck:
     def print(self):
         # print truck overview
         self.get_stats()
-        # print sorted packages
-        self.delivered.sort(key=lambda x: x.id)
+
         for p in self.delivered:
             print(p)
         print()

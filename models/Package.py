@@ -2,9 +2,10 @@
 # delivery Location corresponds to address
 import datetime
 
-
 class Package:
     # each package has an id, address, city, state, zip, deadline, and weight
+    # status represents the current status of the package, depending on where it is
+    # delivered_at is a placeholder that gets finalized when the package is delivered
     def __init__(self, id, address, city, state, zip, deadline, weight):
         self.id = int(id)
         self.address = address
@@ -21,7 +22,9 @@ class Package:
         return "ID: %s " \
                "| Address: %s " \
                "| Deadline: %s " \
-               "| Status: %s" % (self.id,
-                                 self.address,
+               "| Weight: %s " \
+               "| Status: %s " % (self.id,
+                                 self.address + ", " + self.city + ", " + self.state + " " + self.zip,
                                  self.deadline,
+                                 self.weight,
                                  self.status)

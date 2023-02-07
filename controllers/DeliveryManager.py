@@ -125,7 +125,7 @@ class DeliveryManager:
 
         print("-----Package Summary at %s-----" % time.strftime("%H:%M"))
         for p in packages:
-            print("ID: %s | Status: %s" % (p.id, p.status))
+            print(p)
 
     def package_status(self, id, time):
 
@@ -139,6 +139,6 @@ class DeliveryManager:
                     elif time < p.delivered_at:
                         p.status = "En route via %s" % truck.name
                     print("-----Package %d Status at %s-----" % (id, time.strftime("%H:%M")))
-                    print("ID: %s | Status: %s" % (p.id, p.status))
+                    print(p)
                     return
         print("Package not found")
