@@ -14,6 +14,8 @@ class MyHashTable:
             self.table.append([])
 
     # Loads the package data from .csv into the hashtable
+    # Time Complexity: O(n) - it is O(1) for accessing .csv, O(n) for n rows/packages to read, and O(1) for inserting
+    # Space Complexity: O(n) - for n rows/packages in the .csv
     def load_package_data(self):
         # open the .csv file containing the package info
         with open("static/WGUPS Package File.csv") as file:
@@ -32,12 +34,16 @@ class MyHashTable:
                 self.insert(package)
 
     # Apply hash to the passed item and return the bucket
+    # Time Complexity: O(1)
+    # Space Complexity: O(1)
     def get_bucket(self, item):
         bucket = hash(item-1) % len(self.table)
         # retrieve bucket
         return self.table[bucket]
 
     # Insert an item into the hash table
+    # Time Complexity: O(1)
+    # Space Complexity: O(1)
     def insert(self, item):
         # get bucket
         bucket = self.get_bucket(item.id)
@@ -45,6 +51,8 @@ class MyHashTable:
         bucket.append(item)
 
     # Search for item by specifying the key (Package id)
+    # Time Complexity: O(1)
+    # Space Complexity: O(1)
     def search(self, key):
         # get bucket
         bucket = self.get_bucket(key)
@@ -55,12 +63,16 @@ class MyHashTable:
             return None
 
     # remove an item with matching key
+    # Time Complexity: O(1)
+    # Space Complexity: O(1)
     def remove(self, key):
         # get bucket
         bucket = self.get_bucket(key)
         return bucket.pop(0)
 
     # return the current # of items held
+    # Time Complexity: O(n) - iterates n buckets
+    # Space Complexity: O(1)
     def capacity(self):
         count = 0
         for row in self.table:
