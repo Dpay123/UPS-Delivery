@@ -112,7 +112,7 @@ class Graph:
         self.add_directed_edge(location_b, location_a, distance)
 
     # Given two string addresses, return the distance between them
-    # Time Complexity: O(1)
+    # Time Complexity: O(n)
     # Space Complexity: O(1)
     def distance_between(self, address_a, address_b):
         vertex_a = self.get_vertex_by_address(address_a)

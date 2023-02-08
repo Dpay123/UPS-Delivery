@@ -26,6 +26,8 @@ class Truck:
 
     # check package priority and load onto truck from hub
     # a package has priority if it has a delivery requirement such as time
+    # Time complexity: O(1)
+    # Space complexity: O(1)
     def load_package(self, package):
         if package.deadline == "DELAY":
             self.delayed_cargo.append(package)
@@ -35,6 +37,8 @@ class Truck:
             self.cargo.append(package)
 
     # transfer a package from held cargo to delivered cargo, simulating "delivery"
+    # Time : O(n)
+    # Space: O(1)
     def unload_package(self, package, p_list):
         # calculate simulated "time" based upon mileage and update the package status
         package.delivered_at = self.time_at_miles(self.mileage + self.embark_mileage)
@@ -51,9 +55,12 @@ class Truck:
         start_time = datetime.datetime(year=1900, month=1, day=1, hour=8, minute=0)
         return start_time + travel_time
 
-    # Implement the Greedy Algorithm - making the most optimal choice at a given point without concern for big picture
+    # Implement the Nearest Neighbor Greedy Algorithm - making the most optimal choice at a given
+    # point without concern for big picture
     # Each package held is delivered on a nearest distance basis until all packages have been delivered
     # the parameter embark_mileage is passed in to mimic the "embark time" and will be used to calculate delivery times
+    # Time Complexity: O(n^2)
+    # Space Complexity: O(1)
     def deliver(self, embark_mileage):
         # set embark mileage of trucks
         self.embark_mileage = embark_mileage
@@ -84,7 +91,8 @@ class Truck:
     # Return a string representation of condensed truck status
     def get_stats(self):
         print("%s | Embarked: %s | Location: %s | Mileage: %f | Packages Held: %s | Delivered: "
-              % (self.name, self.time_at_miles(self.embark_mileage).strftime("%H:%M"), self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
+              % (self.name, self.time_at_miles(self.embark_mileage).strftime("%H:%M"),
+                 self.location, self.mileage, len(self.cargo) + len(self.priority_cargo)), len(self.delivered))
 
     # Print expanded truck status
     def print(self):
